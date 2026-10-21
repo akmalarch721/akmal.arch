@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Akmal Gofurov Architecture</title>
+<meta name="description" content="Akmal Gofurov — architect, exterior designer and 3D visualizer in Tashkent. Villas, apartment buildings, offices, factories and civic landscapes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: the site is a drawing set. Each project is a sheet with a title block (штамп); the work grid is the sheet register. */
+:root{
+  --paper:#eef0ee;      /* cool tracing-paper ground */
+  --sheet:#f8f9f8;      /* raised sheet / stamp fill */
+  --ink:#15181a;        /* drawing ink */
+  --muted:#5b6266;      /* secondary text */
+  --line:#c5cac9;       /* hairlines, frames */
+  --bronze:#8a5a2e;     /* bronze window profile accent */
+  --on-image:#ffffff;
+  --scrim:rgba(10,12,13,.62);
+  /* viewer is always dark: renders read best on a dark ground */
+  --v-bg:#0b0c0d; --v-panel:#121415; --v-fg:#e8eae9; --v-text:#c9cdcc; --v-muted:#959c9f; --v-line:#2a2e30; --v-accent:#c99a68;
+  --f-display:"Tenor Sans","Optima","Gill Sans","Segoe UI",sans-serif;
+  --f-body:"Golos Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --s-xs:12px; --s-sm:14px; --s-md:16px; --s-lg:20px; --s-xl:clamp(26px,3.2vw,40px); --s-xxl:clamp(46px,9.4vw,152px);
+  --gut-l:max(16px, env(safe-area-inset-left, 0px));
+  --gut-r:max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111314; --sheet:#171a1b; --ink:#e6e8e7; --muted:#9aa1a4; --line:#2f3436; --bronze:#c99a68; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111314; --sheet:#171a1b; --ink:#e6e8e7; --muted:#9aa1a4; --line:#2f3436; --bronze:#c99a68; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--s-md);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
+a{color:inherit}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;letter-spacing:.01em}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--bronze);outline-offset:3px}
+.wrap{max-width:1440px;margin-inline:auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.mono{font-family:var(--f-mono);font-size:var(--s-xs);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto;min-width:0}
+.mark{width:36px;height:36px;border:1px solid var(--ink);display:grid;place-items:center;font-family:var(--f-display);font-size:15px;letter-spacing:.06em;flex:none}
+.brand-name{font-family:var(--f-display);font-size:17px;letter-spacing:.04em;white-space:nowrap}
+.nav{display:flex;gap:22px}
+.nav a{text-decoration:none;font-size:var(--s-sm);color:var(--muted);transition:color .2s}
+.nav a:hover{color:var(--ink)}
+.lang{display:flex;border:1px solid var(--line)}
+.lang button{background:none;border:0;padding:6px 10px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;cursor:pointer;color:var(--muted)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+@media (max-width:760px){.nav a:not(.nav-contact){display:none}.brand-name{font-size:15px}}
+@media (max-width:420px){.brand-name{display:none}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;background:var(--ink)}
+.hero-media{position:relative;aspect-ratio:16/8.4;max-height:86vh;width:100%;overflow:hidden}
+.hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.6s ease, transform 9s ease-out;transform:scale(1.04)}
+.hero-media img.on{opacity:1;transform:scale(1)}
+.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,var(--scrim) 100%);pointer-events:none}
+.hero-text{position:absolute;inset:auto 0 0 0;z-index:2;color:var(--on-image)}
+.hero-text .wrap{padding-block:0 clamp(20px,4vw,48px)}
+.hero-role{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.9;margin-bottom:10px}
+.hero-name{font-size:var(--s-xxl);line-height:.92;text-transform:uppercase;letter-spacing:.015em;max-width:9.5em}
+.hero-dots{display:flex;gap:6px;margin-top:22px}
+@media (min-width:901px){.hero-text .wrap{padding-bottom:calc(clamp(20px,4vw,48px) + 46px)}}
+.hero-dots button{width:36px;height:22px;background:none;border:0;padding:0;cursor:pointer;position:relative}
+.hero-dots button::before{content:"";position:absolute;left:0;right:0;top:10px;height:2px;background:rgba(255,255,255,.4)}
+.hero-dots button[aria-current="true"]::before{background:var(--on-image)}
+@media (max-width:760px){.hero-media{aspect-ratio:4/5;max-height:none}.hero-media img{object-position:50% 50%}}
+@media (prefers-reduced-motion: reduce){.hero-media img{transition:none;transform:none}}
+
+/* ---------- title block (stamp) ---------- */
+.stamp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--ink);background:var(--sheet)}
+.stamp > div{padding:10px 14px;border-right:1px solid var(--ink);min-width:0}
+.stamp > div:last-child{border-right:0}
+.stamp dt,.stamp .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 2px}
+.stamp dd,.stamp .v{margin:0;font-size:var(--s-sm);line-height:1.35}
+.stamp .v b{font-weight:500}
+.stamp-current{display:block}
+.stamp-current button{background:none;border:0;padding:0;cursor:pointer;text-align:left;font-size:var(--s-sm);line-height:1.35;text-decoration:underline;text-decoration-color:var(--bronze);text-underline-offset:3px}
+.under-hero{margin-top:-1px}
+.under-hero .wrap{padding-block:0}
+.under-hero .stamp{transform:translateY(-50%);margin-bottom:-28px}
+@media (max-width:900px){
+  .stamp{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stamp > div:nth-child(2n){border-right:0}
+  .stamp > div:nth-child(-n+2){border-bottom:1px solid var(--ink)}
+  .under-hero .stamp{transform:none;margin:16px 0 0}
+}
+
+/* ---------- intro ---------- */
+section{scroll-margin-top:72px}
+.intro .wrap{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(28px,6vw,96px);padding-block:clamp(56px,8vw,110px) clamp(40px,6vw,80px);align-items:end}
+.intro-lead{font-family:var(--f-display);font-size:var(--s-xl);line-height:1.22;max-width:22em}
+.figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 24px;border-top:1px solid var(--line);padding-top:24px}
+.fig b{display:block;font-family:var(--f-display);font-weight:400;font-size:clamp(34px,4vw,52px);line-height:1;font-variant-numeric:tabular-nums}
+.fig span{display:block;margin-top:6px;font-size:var(--s-sm);color:var(--muted)}
+@media (max-width:860px){.intro .wrap{grid-template-columns:1fr}}
+
+/* ---------- work ---------- */
+.sec-head{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:end;justify-content:space-between;border-top:1px solid var(--ink);padding-top:20px;margin-bottom:28px}
+.sec-head h2{font-size:var(--s-xl);line-height:1.1}
+.sec-head .mono{color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px}
+.filters button{background:none;border:1px solid var(--line);padding:8px 14px;cursor:pointer;font-size:var(--s-sm);display:flex;gap:8px;align-items:baseline;transition:border-color .2s,background .2s}
+.filters button sup{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);top:0}
+.filters button:hover{border-color:var(--ink)}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filters button[aria-pressed="true"] sup{color:inherit;opacity:.7}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:44px 26px;padding-bottom:clamp(64px,9vw,120px)}
+.card{display:block;width:100%;background:none;border:0;padding:0;text-align:left;cursor:pointer}
+.card-img{position:relative;aspect-ratio:3/2;max-width:100%;overflow:hidden;background:var(--line)}
+.card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.card:hover .card-img img{transform:scale(1.035)}
+.card-count{position:absolute;right:10px;bottom:10px;background:var(--scrim);color:var(--on-image);font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;padding:3px 8px}
+.card-meta{display:flex;justify-content:space-between;gap:12px;margin-top:14px;padding-top:10px;border-top:1px solid var(--line)}
+.card-meta .code{color:var(--bronze)}
+.card-meta .cat{color:var(--muted);text-align:right}
+.card h3{font-size:22px;line-height:1.2;margin-top:8px}
+.card .loc{margin-top:4px;font-size:var(--s-sm);color:var(--muted)}
+.card:hover h3{text-decoration:underline;text-decoration-color:var(--bronze);text-decoration-thickness:1px;text-underline-offset:5px}
+
+/* ---------- services & process ---------- */
+.band{background:var(--sheet);border-block:1px solid var(--line)}
+.band .wrap{padding-block:clamp(56px,8vw,110px)}
+.services{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.svc{padding:24px 24px 28px 0;border-right:1px solid var(--line);min-width:0}
+.svc + .svc{padding-left:24px}
+.svc:last-child{border-right:0}
+.svc .mono{color:var(--bronze)}
+.svc h3{font-size:22px;line-height:1.2;margin:14px 0 10px}
+.svc p{color:var(--muted);font-size:15px;max-width:34ch}
+@media (max-width:980px){.services{grid-template-columns:repeat(2,minmax(0,1fr))}.svc:nth-child(2n){border-right:0}.svc:nth-child(3){padding-left:0}.svc:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+@media (max-width:560px){.services{grid-template-columns:1fr}.svc,.svc + .svc{padding:22px 0;border-right:0;border-bottom:1px solid var(--line)}}
+.process{margin-top:clamp(48px,7vw,88px)}
+.process h3.lbl{font-family:var(--f-mono);font-size:var(--s-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:18px 18px 0 0;border-top:2px solid var(--ink);min-width:0}
+.steps li::before{content:counter(st,decimal-leading-zero);font-family:var(--f-mono);font-size:12px;color:var(--bronze);letter-spacing:.06em}
+.steps b{display:block;font-family:var(--f-display);font-weight:400;font-size:19px;line-height:1.25;margin:8px 0 6px}
+.steps span{display:block;font-size:14px;color:var(--muted)}
+@media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 20px}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+
+/* ---------- about ---------- */
+.about .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(28px,6vw,96px);padding-block:clamp(56px,8vw,110px)}
+.about h2{font-size:var(--s-xl);line-height:1.1}
+.about-text{display:grid;gap:16px;max-width:62ch}
+.about-text p{font-size:17px}
+.facts{margin-top:28px;display:grid;gap:0;border-top:1px solid var(--line)}
+.facts > div{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.facts .k{color:var(--muted)}
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+.tools span{border:1px solid var(--line);padding:3px 10px;font-size:14px}
+@media (max-width:860px){.about .wrap{grid-template-columns:1fr}}
+
+/* ---------- contact ---------- */
+.contact{background:var(--ink);color:var(--paper)}
+.contact .wrap{padding-block:clamp(56px,8vw,110px)}
+.contact h2{font-size:clamp(34px,6vw,84px);line-height:1;max-width:14ch}
+.contact .lead{margin-top:18px;max-width:52ch;opacity:.78;font-size:17px}
+.clist{margin-top:44px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid color-mix(in srgb,var(--paper) 30%,transparent)}
+.clist > div{padding:18px 18px 4px 0;min-width:0}
+.clist .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-bottom:6px}
+.clist .v{font-size:18px;overflow-wrap:anywhere;user-select:all}
+.clist a.v{text-decoration:underline;text-decoration-color:var(--bronze);text-underline-offset:4px;user-select:auto}
+.copy{margin-top:8px;background:none;border:1px solid color-mix(in srgb,var(--paper) 35%,transparent);color:inherit;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;cursor:pointer}
+.copy:hover{border-color:var(--paper)}
+@media (max-width:900px){.clist{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.clist{grid-template-columns:1fr}}
+.foot .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;padding-block:22px;color:var(--muted);font-size:13px}
+
+/* ---------- viewer ---------- */
+.viewer{position:fixed;inset:0;z-index:100;background:var(--v-bg);color:var(--v-fg);display:grid;grid-template-columns:minmax(0,1fr) 400px;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.viewer[hidden]{display:none!important}
+.v-stage{position:relative;display:grid;grid-template-rows:minmax(0,1fr) auto;min-height:0;padding-left:env(safe-area-inset-left,0px)}
+.v-frame{position:relative;min-height:0;display:grid;place-items:center;padding:56px 64px 12px;touch-action:pan-y}
+.v-frame img{max-width:100%;max-height:100%;object-fit:contain;display:block;transition:opacity .35s}
+.v-frame img.fade{opacity:.15}
+.v-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border:1px solid var(--v-line);background:rgba(11,12,13,.6);color:var(--v-fg);cursor:pointer;display:grid;place-items:center;font-size:20px}
+.v-nav:hover{border-color:var(--v-fg)}
+.v-prev{left:10px}.v-next{right:10px}
+.v-bar{display:flex;align-items:center;gap:14px;padding:10px 20px 16px 20px;min-width:0}
+.v-count{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--v-muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.v-cap{font-size:14px;color:var(--v-fg);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v-thumbs{display:flex;gap:6px;overflow-x:auto;padding:0 20px 18px;scrollbar-width:thin}
+.v-thumbs button{flex:none;width:92px;aspect-ratio:3/2;padding:0;border:1px solid transparent;background:var(--v-line);cursor:pointer;opacity:.55;transition:opacity .2s}
+.v-thumbs button img{width:100%;height:100%;object-fit:cover;display:block}
+.v-thumbs button[aria-current="true"]{opacity:1;border-color:var(--v-accent)}
+.v-thumbs button:hover{opacity:1}
+.v-panel{background:var(--v-panel);border-left:1px solid var(--v-line);overflow-y:auto;padding:22px max(24px, env(safe-area-inset-right,0px)) 32px 26px;display:flex;flex-direction:column;gap:22px}
+.v-close{align-self:flex-end;background:none;border:1px solid var(--v-line);color:var(--v-fg);font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:7px 12px;cursor:pointer}
+.v-close:hover{border-color:var(--v-fg)}
+.v-code{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;color:var(--v-accent)}
+.v-title{font-size:30px;line-height:1.15;margin-top:6px}
+.v-desc{color:var(--v-text);font-size:15.5px;line-height:1.65}
+.v-tb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border:1px solid var(--v-line);margin:0}
+.v-tb > div{padding:10px 12px;border-bottom:1px solid var(--v-line);min-width:0}
+.v-tb > div:nth-child(odd){border-right:1px solid var(--v-line)}
+.v-tb > div.wide{grid-column:1 / -1;border-right:0}
+.v-tb > div:last-child,.v-tb > div:nth-last-child(2):nth-child(odd){border-bottom:0}
+.v-tb dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--v-muted);margin-bottom:2px}
+.v-tb dd{margin:0;font-size:14px}
+.v-more{margin-top:auto;border-top:1px solid var(--v-line);padding-top:16px;display:flex;gap:10px;justify-content:space-between}
+.v-more button{background:none;border:0;color:var(--v-fg);cursor:pointer;text-align:left;padding:0;font-size:14px;min-width:0}
+.v-more button span{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--v-muted);margin-bottom:3px}
+.v-more button:last-child{text-align:right}
+@media (max-width:900px){
+  .viewer{grid-template-columns:1fr;grid-template-rows:auto auto;overflow-y:auto}
+  .v-stage{height:68vh;min-height:340px;padding-left:0}
+  .v-frame{padding:56px 10px 8px}
+  .v-nav{width:40px;height:40px;top:auto;bottom:10px;transform:none;background:rgba(11,12,13,.75)}
+  .v-prev{left:10px}.v-next{right:10px}
+  .v-panel{border-left:0;border-top:1px solid var(--v-line);overflow:visible;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+  .v-close{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:max(10px, env(safe-area-inset-right,0px));z-index:3;background:rgba(11,12,13,.75)}
+  .v-thumbs{padding-inline:16px}
+}
+body.locked{overflow:hidden}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Akmal Gofurov — Architect &amp; 3D Visualizer">
+<meta property="og:description" content="Architect, exterior designer and 3D visualizer in Tashkent. Villas, apartment buildings, offices, factories and civic landscapes.">
+<meta property="og:url" content="https://akmalarch721.github.io/akmal.arch/portfolio/">
+<meta property="og:image" content="https://akmalarch721.github.io/akmal.arch/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2315181a'/%3E%3Crect x='6' y='6' width='52' height='52' fill='none' stroke='%23eef0ee' stroke-width='2'/%3E%3Ctext x='32' y='41' font-family='Georgia,serif' font-size='24' fill='%23eef0ee' text-anchor='middle' letter-spacing='1'%3EAG%3C/text%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Akmal Gofurov">
+      <span class="mark" aria-hidden="true">AG</span>
+      <span class="brand-name">Akmal Gofurov</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#work" data-t="nav_work">Work</a>
+      <a href="#services" data-t="nav_services">Services</a>
+      <a href="#about" data-t="nav_about">About</a>
+      <a href="#contact" class="nav-contact" data-t="nav_contact">Contact</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-ru" data-lang="ru" aria-pressed="false">RU</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-label="Akmal Gofurov">
+    <div class="hero-media" id="hero-media">
+      <img src="../img/hero/1.webp" alt="" class="on" fetchpriority="high" decoding="async">
+      <img src="../img/hero/2.webp" alt="" decoding="async">
+      <img src="../img/hero/3.webp" alt="" decoding="async">
+      <img src="../img/hero/4.webp" alt="" decoding="async">
+    </div>
+    <div class="hero-text">
+      <div class="wrap">
+        <p class="hero-role" data-t="role">Architect · Exterior designer · 3D visualizer</p>
+        <h1 class="hero-name">Akmal Gofurov</h1>
+        <div class="hero-dots" id="hero-dots" role="group" aria-label="Hero images"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="under-hero">
+    <div class="wrap">
+      <div class="stamp" aria-label="Summary">
+        <div><p class="k" data-t="st_base">Based in</p><p class="v" data-t="st_base_v">Tashkent, Uzbekistan</p></div>
+        <div><p class="k" data-t="st_practice">Practice</p><p class="v" data-t="st_practice_v">5+ years, exteriors and 3D</p></div>
+        <div><p class="k" data-t="st_tools">Tools</p><p class="v">3ds Max · Corona · AutoCAD · Revit · Photoshop</p></div>
+        <div class="stamp-current"><div><p class="k" data-t="st_shown">On screen</p><button type="button" id="hero-current">—</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="intro" aria-label="Introduction">
+    <div class="wrap">
+      <p class="intro-lead" data-t="lead">I design building exteriors and present them in photoreal images, from family villas to factories. Clients see the finished building before construction starts.</p>
+      <div class="figures">
+        <div class="fig"><b>5+</b><span data-t="f_years">years in practice</span></div>
+        <div class="fig"><b>200+</b><span data-t="f_projects">projects in the archive since 2024</span></div>
+        <div class="fig"><b id="fig-shown">29</b><span data-t="f_shown">selected projects on this site</span></div>
+        <div class="fig"><b>5</b><span data-t="f_types">building types, from houses to plants</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" aria-labelledby="work-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="work-h" data-t="work_h">Selected work</h2>
+        <p class="mono" data-t="work_note">Click a project to open all views</p>
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="Filter projects"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section id="services" class="band" aria-labelledby="svc-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="svc-h" data-t="svc_h">Services</h2>
+        <p class="mono" data-t="svc_note">For private clients, developers and industry</p>
+      </div>
+      <div class="services">
+        <div class="svc"><p class="mono" data-t="s1_k">Façade</p><h3 data-t="s1_h">Exterior design</h3><p data-t="s1_p">Façade concepts, materials and colour for new buildings and reconstructions, usually in two or three options to compare.</p></div>
+        <div class="svc"><p class="mono" data-t="s2_k">Drawings</p><h3 data-t="s2_h">Architectural design</h3><p data-t="s2_p">Sketch projects and working drawings in AutoCAD and Revit: plans, elevations, sections and the site plan.</p></div>
+        <div class="svc"><p class="mono" data-t="s3_k">Images</p><h3 data-t="s3_h">3D visualization</h3><p data-t="s3_p">Photoreal renders in 3ds Max and Corona: street, courtyard, aerial and evening views, finished in Photoshop.</p></div>
+        <div class="svc"><p class="mono" data-t="s4_k">Site</p><h3 data-t="s4_h">Site and landscape</h3><p data-t="s4_p">Parking, paths, planting and lighting around the building, shown in aerial views of the whole plot.</p></div>
+      </div>
+      <div class="process">
+        <h3 class="lbl" data-t="proc_h">How a project runs</h3>
+        <ol class="steps">
+          <li><b data-t="p1_b">Brief and site</b><span data-t="p1_s">Programme, plot survey, budget and references.</span></li>
+          <li><b data-t="p2_b">Massing</b><span data-t="p2_s">Volume studies and plan logic on the real plot.</span></li>
+          <li><b data-t="p3_b">Façade options</b><span data-t="p3_s">Two or three directions in style, materials and colour.</span></li>
+          <li><b data-t="p4_b">Visualization</b><span data-t="p4_s">Final views from the street, the courtyard and the air.</span></li>
+          <li><b data-t="p5_b">Approval package</b><span data-t="p5_s">Presentation boards and drawings for review and permits.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about" aria-labelledby="about-h">
+    <div class="wrap">
+      <div>
+        <h2 id="about-h" data-t="about_h">About</h2>
+      </div>
+      <div>
+        <div class="about-text">
+          <p data-t="about_p1">I am an architect and 3D visualizer based in the Zangiota district of Tashkent. For more than five years I have designed exteriors for private homeowners, developers and industrial companies across Uzbekistan.</p>
+          <p data-t="about_p2">My work covers the whole range of everyday architecture: classical and modern villas, apartment buildings, offices and shops, warehouses, factories and farms, and the public space around them. I model and render every project myself, so the images show the building as designed.</p>
+        </div>
+        <div class="facts">
+          <div><span class="k" data-t="fa_edu">Education</span><span data-t="fa_edu_v">Kimyo International University in Tashkent</span></div>
+          <div><span class="k" data-t="fa_lang">Languages</span><span data-t="fa_lang_v">Uzbek, Russian, English</span></div>
+          <div><span class="k" data-t="fa_tools">Software</span><span class="tools"><span>3ds Max</span><span>Corona Renderer</span><span>AutoCAD</span><span>Revit</span><span>Photoshop</span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <h2 id="contact-h" data-t="c_h">Have a plot or a building to design?</h2>
+      <p class="lead" data-t="c_lead">Send a site plan, a photo of the plot or a sketch. I will reply with questions and a proposal for the work.</p>
+      <div class="clist">
+        <div><p class="k" data-t="c_email">Email</p><p class="v" id="c-email">akmal.arch2003@gmail.com</p><button type="button" class="copy" data-copy="c-email" data-t="copy">Copy</button></div>
+        <div><p class="k" data-t="c_phone">Phone</p><p class="v" id="c-phone">+998 99 721 11 28</p><button type="button" class="copy" data-copy="c-phone" data-t="copy">Copy</button></div>
+        <div><p class="k">Telegram</p><a class="v" href="https://t.me/arcitectt" target="_blank" rel="noopener">@arcitectt</a></div>
+        <div><p class="k">Instagram</p><a class="v" href="https://www.instagram.com/akmal.arch/" target="_blank" rel="noopener">@akmal.arch</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>© 2026 Akmal Gofurov</span>
+    <span data-t="foot_r">All renders and designs by the author</span>
+  </div>
+</footer>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="v-title" hidden>
+  <div class="v-stage">
+    <div class="v-frame" id="v-frame">
+      <img id="v-img" alt="">
+      <button type="button" class="v-nav v-prev" id="v-prev" aria-label="Previous image">←</button>
+      <button type="button" class="v-nav v-next" id="v-next" aria-label="Next image">→</button>
+    </div>
+    <div>
+      <div class="v-bar"><span class="v-count" id="v-count">01 / 08</span><span class="v-cap" id="v-cap"></span></div>
+      <div class="v-thumbs" id="v-thumbs"></div>
+    </div>
+  </div>
+  <aside class="v-panel">
+    <button type="button" class="v-close" id="v-close" data-t="close">Close ✕</button>
+    <div>
+      <p class="v-code" id="v-code"></p>
+      <h2 class="v-title" id="v-title"></h2>
+    </div>
+    <dl class="v-tb" id="v-tb"></dl>
+    <p class="v-desc" id="v-desc"></p>
+    <div class="v-more">
+      <button type="button" id="v-prevp"></button>
+      <button type="button" id="v-nextp"></button>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+"use strict";
+var T={
+ en:{nav_work:"Work",nav_services:"Services",nav_about:"About",nav_contact:"Contact",role:"Architect · Exterior designer · 3D visualizer",
+  st_base:"Based in",st_base_v:"Tashkent, Uzbekistan",st_practice:"Practice",st_practice_v:"5+ years, exteriors and 3D",st_tools:"Tools",st_shown:"On screen",
+  lead:"I design building exteriors and present them in photoreal images, from family villas to factories. Clients see the finished building before construction starts.",
+  f_years:"years in practice",f_projects:"projects in the archive since 2024",f_shown:"selected projects on this site",f_types:"building types, from houses to plants",
+  work_h:"Selected work",work_note:"Open a project to see all views",all:"All projects",
+  svc_h:"Services",svc_note:"For private clients, developers and industry",
+  s1_k:"Façade",s1_h:"Exterior design",s1_p:"Façade concepts, materials and colour for new buildings and reconstructions, usually in two or three options to compare.",
+  s2_k:"Drawings",s2_h:"Architectural design",s2_p:"Sketch projects and working drawings in AutoCAD and Revit: plans, elevations, sections and the site plan.",
+  s3_k:"Images",s3_h:"3D visualization",s3_p:"Photoreal renders in 3ds Max and Corona: street, courtyard, aerial and evening views, finished in Photoshop.",
+  s4_k:"Site",s4_h:"Site and landscape",s4_p:"Parking, paths, planting and lighting around the building, shown in aerial views of the whole plot.",
+  proc_h:"How a project runs",p1_b:"Brief and site",p1_s:"Programme, plot survey, budget and references.",p2_b:"Massing",p2_s:"Volume studies and plan logic on the real plot.",
+  p3_b:"Façade options",p3_s:"Two or three directions in style, materials and colour.",p4_b:"Visualization",p4_s:"Final views from the street, the courtyard and the air.",
+  p5_b:"Approval package",p5_s:"Presentation boards and drawings for review and permits.",
+  about_h:"About",about_p1:"I am an architect and 3D visualizer based in the Zangiota district of Tashkent. For more than five years I have designed exteriors for private homeowners, developers and industrial companies across Uzbekistan.",
+  about_p2:"My work covers the whole range of everyday architecture: classical and modern villas, apartment buildings, offices and shops, warehouses, factories and farms, and the public space around them. I model and render every project myself, so the images show the building as designed.",
+  fa_edu:"Education",fa_edu_v:"Kimyo International University in Tashkent",fa_lang:"Languages",fa_lang_v:"Uzbek, Russian, English",fa_tools:"Software",
+  c_h:"Have a plot or a building to design?",c_lead:"Send a site plan, a photo of the plot or a sketch. I will reply with questions and a proposal for the work.",
+  c_email:"Email",c_phone:"Phone",copy:"Copy",copied:"Copied",selected:"Selected",foot_r:"All renders and designs by the author",
+  close:"Close ✕",tb_type:"Type",tb_loc:"Location",tb_year:"Year",tb_views:"Views",tb_scope:"Scope",scope:"Exterior design, 3D visualization",
+  prevp:"Previous project",nextp:"Next project",open:"Open project",uz:"Uzbekistan",view:"view"},
+ ru:{nav_work:"Проекты",nav_services:"Услуги",nav_about:"Обо мне",nav_contact:"Контакты",role:"Архитектор · Дизайнер фасадов · 3D-визуализатор",
+  st_base:"Город",st_base_v:"Ташкент, Узбекистан",st_practice:"Практика",st_practice_v:"5+ лет, фасады и 3D",st_tools:"Программы",st_shown:"На экране",
+  lead:"Проектирую фасады зданий и показываю их в фотореалистичных визуализациях: от частных вилл до заводов. Заказчик видит готовое здание ещё до начала стройки.",
+  f_years:"лет практики",f_projects:"проектов в архиве с 2024 года",f_shown:"избранных проектов на сайте",f_types:"типов зданий: от домов до заводов",
+  work_h:"Избранные проекты",work_note:"Откройте проект, чтобы увидеть все виды",all:"Все проекты",
+  svc_h:"Услуги",svc_note:"Для частных заказчиков, девелоперов и промышленности",
+  s1_k:"Фасад",s1_h:"Дизайн фасадов",s1_p:"Фасадные решения, материалы и цвет для новых зданий и реконструкций, обычно в двух-трёх вариантах для сравнения.",
+  s2_k:"Чертежи",s2_h:"Архитектурное проектирование",s2_p:"Эскизный проект и рабочие чертежи в AutoCAD и Revit: планы, фасады, разрезы и генплан.",
+  s3_k:"Изображения",s3_h:"3D-визуализация",s3_p:"Фотореалистичные рендеры в 3ds Max и Corona: виды с улицы, из двора, с высоты и вечерние, с доработкой в Photoshop.",
+  s4_k:"Участок",s4_h:"Генплан и благоустройство",s4_p:"Парковка, дорожки, озеленение и освещение вокруг здания на видах сверху по всему участку.",
+  proc_h:"Как идёт работа",p1_b:"Задание и участок",p1_s:"Программа, съёмка участка, бюджет и референсы.",p2_b:"Объёмы",p2_s:"Объёмные решения и логика плана на реальном участке.",
+  p3_b:"Варианты фасада",p3_s:"Два-три направления по стилю, материалам и цвету.",p4_b:"Визуализация",p4_s:"Итоговые виды с улицы, из двора и с высоты.",
+  p5_b:"Пакет на согласование",p5_s:"Планшеты и чертежи для градсовета и разрешений.",
+  about_h:"Обо мне",about_p1:"Я архитектор и 3D-визуализатор из Зангиатинского района Ташкента. Больше пяти лет проектирую фасады для частных заказчиков, девелоперов и промышленных компаний по всему Узбекистану.",
+  about_p2:"Работаю со всем спектром повседневной архитектуры: классические и современные виллы, жилые дома, офисы и магазины, склады, заводы и фермы, а также общественные пространства вокруг них. Моделирую и визуализирую каждый проект сам, поэтому изображения показывают здание именно таким, каким оно задумано.",
+  fa_edu:"Образование",fa_edu_v:"Kimyo International University in Tashkent",fa_lang:"Языки",fa_lang_v:"узбекский, русский, английский",fa_tools:"Программы",
+  c_h:"Есть участок или здание для проекта?",c_lead:"Пришлите план участка, фото или эскиз. Я отвечу вопросами и предложением по работе.",
+  c_email:"Почта",c_phone:"Телефон",copy:"Копировать",copied:"Скопировано",selected:"Выделено",foot_r:"Все проекты и визуализации выполнены автором",
+  close:"Закрыть ✕",tb_type:"Тип",tb_loc:"Место",tb_year:"Год",tb_views:"Видов",tb_scope:"Работы",scope:"Дизайн фасадов, 3D-визуализация",
+  prevp:"Предыдущий проект",nextp:"Следующий проект",open:"Открыть проект",uz:"Узбекистан",view:"вид"}
+};
+var CAT={
+ res:{en:"Private residences",ru:"Частные дома"},
+ housing:{en:"Apartment buildings",ru:"Многоквартирные дома"},
+ com:{en:"Commercial and office",ru:"Торговые и офисные"},
+ ind:{en:"Industrial and logistics",ru:"Промышленные и склады"},
+ civic:{en:"Civic and landscape",ru:"Общественные и благоустройство"}
+};
+var P=[
+ {s:"stone-mansion",c:"res",y:2026,n:8,
+  t:{en:"Courtyard Mansion",ru:"Особняк с внутренним двором"},
+  d:{en:"A single-storey neoclassical house planned around a garden courtyard with fountains and clipped topiary. Arched dormers with round windows, a colonnaded carport and limestone-coloured cladding give the long street front a formal, quiet presence. Aerial views show how the wings wrap the courtyard.",
+     ru:"Одноэтажный неоклассический дом, построенный вокруг сада с фонтанами и стрижеными деревьями. Арочные люкарны с круглыми окнами, навес для машин с колоннадой и облицовка в тоне известняка придают длинному уличному фасаду строгость и спокойствие. Виды сверху показывают, как крылья дома охватывают двор."}},
+ {s:"qashqadaryo-villa",c:"res",y:2025,n:7,loc:{en:"Qashqadaryo region",ru:"Кашкадарьинская область"},
+  t:{en:"Mansard Villa",ru:"Вилла с мансардой"},
+  d:{en:"A symmetrical two-storey villa in the French classical manner. The slate-grey mansard roof, the arched central bay with an oculus and the dark stone plinth set a clear order for the façade, while terraces and planting soften the ground floor.",
+     ru:"Симметричная двухэтажная вилла во французском классическом духе. Мансардная кровля графитового цвета, арочный центральный ризалит с окулюсом и тёмный каменный цоколь задают фасаду ясный порядок, а террасы и озеленение смягчают первый этаж."}},
+ {s:"classical-office",c:"com",y:2025,n:8,
+  t:{en:"Neoclassical Office Building",ru:"Неоклассическое офисное здание"},
+  d:{en:"A mid-rise office building on a city corner, clad in light stone, with a row of arched windows on the top floor and a glazed retail base. Two roof variants were developed: a pitched roof and a glazed rooftop pavilion.",
+     ru:"Офисное здание средней этажности на углу квартала: облицовка светлым камнем, ряд арочных окон на верхнем этаже и остеклённый торговый первый этаж. Разработаны два варианта кровли: скатная и со стеклянным павильоном."},
+  cap:[[1,4,{en:"Variant A · pitched roof",ru:"Вариант А · скатная кровля"}],[5,8,{en:"Variant B · glazed rooftop pavilion",ru:"Вариант Б · стеклянный павильон на кровле"}]]},
+ {s:"residential-complex",c:"housing",y:2024,n:8,
+  t:{en:"Residential Complex with Retail Base",ru:"Жилой комплекс с торговым первым этажом"},
+  d:{en:"A high-rise apartment complex in a restrained neoclassical language: grey stone, a vertical rhythm of pilasters and a stepped crown. Double-height shops line the street, and the inner courtyard holds a children’s playground and planted walks.",
+     ru:"Многоэтажный жилой комплекс в сдержанном неоклассическом языке: серый камень, вертикальный ритм пилястр и ступенчатое завершение. Вдоль улицы расположены торговые помещения двойной высоты, во внутреннем дворе находятся детская площадка и озеленённые дорожки."}},
+ {s:"admin-production",c:"ind",y:2025,n:7,
+  t:{en:"Administrative and Production Building",ru:"Административно-производственное здание"},
+  d:{en:"A five-storey administrative block with a glazed stair tower, joined to a long production hall behind it. A staff roof terrace overlooks the site, and the aerial views show the full depth of the plot along the highway.",
+     ru:"Пятиэтажный административный корпус с остеклённой лестничной башней, примыкающий к протяжённому производственному цеху. Кровельная терраса для сотрудников выходит на участок, а виды сверху показывают всю глубину территории вдоль трассы."}},
+ {s:"twin-villas",c:"res",y:2025,n:8,loc:{en:"Bo‘zsuv",ru:"Бозсу"},
+  t:{en:"Twin Classical Villas",ru:"Парные классические виллы"},
+  d:{en:"Two mirrored family houses on neighbouring plots behind one continuous street façade with gates and garages. Each house opens onto its own paved courtyard with a covered terrace, and arched dormers and tiled hipped roofs tie the pair together.",
+     ru:"Два зеркальных дома на соседних участках за единым уличным фасадом с воротами и гаражами. Каждый дом выходит в собственный мощёный двор с крытой террасой, а арочные люкарны и черепичные вальмовые крыши объединяют пару в ансамбль."}},
+ {s:"boulevard-retail",c:"com",y:2025,n:8,loc:{en:"Olmaliq",ru:"Алмалык"},
+  t:{en:"Boulevard Retail Gallery",ru:"Торговая галерея на бульваре"},
+  d:{en:"A two-storey shopping gallery along a boulevard with a cycle lane and planted verges. Two façade concepts were proposed: one with pointed arches and carved stone in a national character, and a contemporary one with ribbed panels and full-height glazing.",
+     ru:"Двухэтажная торговая галерея вдоль бульвара с велодорожкой и газонами. Предложены два фасадных решения: со стрельчатыми арками и резным камнем в национальном характере и современное, с рифлёными панелями и витражами на всю высоту."},
+  cap:[[1,4,{en:"Concept A · national character",ru:"Концепция А · национальный характер"}],[5,8,{en:"Concept B · contemporary",ru:"Концепция Б · современная"}]]},
+ {s:"xumson-villa",c:"res",y:2026,n:7,loc:{en:"Xumson, Bo‘stonliq",ru:"Хумсан, Бостанлык"},
+  t:{en:"Mountain Villa with Pool",ru:"Загородная вилла с бассейном"},
+  d:{en:"A contemporary two-storey house in white render and grey stone, with a long pool beside the garden. The street side stays closed, with a garage and service wing, and the aerial views show the L-shaped plan that shelters the garden.",
+     ru:"Современный двухэтажный дом из белой штукатурки и серого камня с длинным бассейном вдоль сада. Со стороны улицы дом закрыт гаражом и хозяйственным крылом, а виды сверху показывают Г-образный план, укрывающий сад."}},
+ {s:"roof-garden-tower",c:"housing",y:2025,n:7,
+  t:{en:"Residential Tower with Roof Garden",ru:"Жилой дом с садом на кровле"},
+  d:{en:"A multi-storey apartment building in light façade panels with deep balconies. The roof becomes a shared garden with lawns and pavilions, and the ground floor holds commercial units facing the parking court.",
+     ru:"Многоэтажный жилой дом со светлыми фасадными панелями и глубокими балконами. Кровля превращена в общий сад с газонами и павильонами, на первом этаже расположены коммерческие помещения, обращённые к парковке."}},
+ {s:"bilol-villa",c:"res",y:2025,n:3,
+  t:{en:"Single-Storey Classical Villa",ru:"Одноэтажная классическая вилла"},
+  d:{en:"A compact villa on one level with a portico of paired columns, tall French windows and a grey hipped roof. A stone path leads through a front garden of topiary and low shrubs.",
+     ru:"Компактная вилла в один уровень с портиком из парных колонн, высокими французскими окнами и серой вальмовой кровлей. Каменная дорожка ведёт через палисадник со стрижеными деревьями и кустарником."}},
+ {s:"mahalla-office",c:"civic",y:2025,n:6,
+  t:{en:"Mahalla Administration Building",ru:"Здание махаллинского комитета"},
+  d:{en:"A civic building for a neighbourhood council, with a tall grid of pilasters, a glazed ground floor and a landscaped forecourt with parking. The aerial views place it on a busy street between existing blocks.",
+     ru:"Общественное здание для органа самоуправления махалли: высокий ритм пилястр, остеклённый первый этаж и озеленённая площадка перед входом с парковкой. Виды сверху показывают его на оживлённой улице среди существующей застройки."}},
+ {s:"plastics-factory",c:"ind",y:2025,n:7,
+  t:{en:"Plastics Factory with Office Wing",ru:"Завод пластмасс с офисным крылом"},
+  d:{en:"A production hall in metal sandwich panels with a two-storey office wing in stone-grey cladding. The forecourt combines staff parking, lawns and a guard house, and the aerial views show a small garden with a pool for employees.",
+     ru:"Производственный цех из металлических сэндвич-панелей с двухэтажным офисным крылом в серой облицовке. Перед зданием находятся парковка для сотрудников, газоны и пост охраны, а виды сверху показывают небольшой сад с бассейном для персонала."}},
+ {s:"brick-residence",c:"housing",y:2025,n:6,loc:{en:"Bo‘stonliq",ru:"Бостанлык"},
+  t:{en:"Brick Apartment House",ru:"Кирпичный жилой дом"},
+  d:{en:"A five-storey house in red brick with white cornices, pilasters and a slate roof crowned by a pediment. The plot is landscaped on all sides, with parking tucked behind planting.",
+     ru:"Пятиэтажный дом из красного кирпича с белыми карнизами, пилястрами и графитовой кровлей с фронтоном. Участок озеленён со всех сторон, парковка скрыта за посадками."}},
+ {s:"loggia-villa",c:"res",y:2025,n:5,
+  t:{en:"Villa with Double-Height Loggia",ru:"Вилла с двухсветной лоджией"},
+  d:{en:"Courtyard views of a two-storey classical house. A double-height covered terrace with a coffered ceiling and pendant lights opens to the garden, next to a tall glazed stair hall in travertine-coloured cladding.",
+     ru:"Виды из двора двухэтажного классического дома. Двухсветная крытая терраса с кессонным потолком и подвесными светильниками выходит в сад, рядом находится высокое остеклённое лестничное пространство в облицовке цвета травертина."}},
+ {s:"shopping-centre",c:"com",y:2025,n:5,
+  t:{en:"Shopping and Office Centre",ru:"Торгово-офисный центр"},
+  d:{en:"A three-storey building with continuous ribbon glazing, timber-toned fins and a sculpted corner volume. The aerial view shows how the plan follows a wedge-shaped plot, with parking along both streets.",
+     ru:"Трёхэтажное здание с ленточным остеклением, ламелями под дерево и пластичным угловым объёмом. Вид сверху показывает, как план следует клиновидному участку, с парковкой вдоль обеих улиц."}},
+ {s:"angren-plant",c:"ind",y:2024,n:7,loc:{en:"Angren",ru:"Ангрен"},
+  t:{en:"Manufacturing Plant",ru:"Производственный корпус"},
+  d:{en:"A long two-storey production building with an office front of dark ribbon windows and grey cladding. Street-level views follow the façade along the road, and the aerial view shows the hall and the yard behind it.",
+     ru:"Протяжённый двухэтажный производственный корпус с офисной частью: тёмное ленточное остекление и серая облицовка. Виды с улицы следуют за фасадом вдоль дороги, а вид сверху показывает цех и двор за ним."}},
+ {s:"gabled-residence",c:"res",y:2025,n:4,
+  t:{en:"Three-Gable Residence",ru:"Дом с тремя фронтонами"},
+  d:{en:"A three-storey family house in pale stone, crowned by three pediments. Window boxes with planting, a central bronze entrance door and a quiet courtyard elevation with lit windows complete the house.",
+     ru:"Трёхэтажный дом из светлого камня, завершённый тремя фронтонами. Цветочные ящики под окнами, центральная бронзовая входная дверь и спокойный дворовый фасад с освещёнными окнами."}},
+ {s:"zangiota-landscape",c:"civic",y:2025,n:8,loc:{en:"Zangiota district",ru:"Зангиатинский район"},
+  t:{en:"District Civic Landscape",ru:"Благоустройство районного центра"},
+  d:{en:"A landscape proposal for a district administration and its approach road: a district name sign in a flower bed, shaded alleys with art objects and benches, an entrance stela and a linear park with cycle and walking paths along the highway.",
+     ru:"Проект благоустройства территории районной администрации и въездной дороги: надпись с названием района в цветнике, тенистые аллеи с арт-объектами и скамьями, въездная стела и линейный парк с вело- и пешеходными дорожками вдоль трассы."},
+  cap:[[1,5,{en:"Administration grounds",ru:"Территория администрации"}],[6,8,{en:"Entrance stela and boulevard",ru:"Въездная стела и бульвар"}]]},
+ {s:"qibray-logistics",c:"ind",y:2026,n:7,loc:{en:"Qibray",ru:"Кибрай"},
+  t:{en:"Logistics Complex",ru:"Логистический комплекс"},
+  d:{en:"A warehouse with loading docks and a graphite office volume on a sloping site. Retaining walls are planted as terraces, and the aerial views show how truck access and the office entrance are kept apart.",
+     ru:"Склад с погрузочными доками и графитовым офисным объёмом на участке с перепадом рельефа. Подпорные стенки озеленены террасами, а виды сверху показывают, как разведены грузовой въезд и вход в офис."}},
+ {s:"white-classic-residence",c:"res",y:2025,n:7,
+  t:{en:"White Classical Residence",ru:"Белый классический дом"},
+  d:{en:"A three-storey house with pilasters, black window frames and glass balustrades on the loggias. The flat roof carries a planted terrace, visible in the aerial view.",
+     ru:"Трёхэтажный дом с пилястрами, чёрными оконными рамами и стеклянными ограждениями лоджий. На плоской кровле устроена озеленённая терраса, хорошо видная сверху."}},
+ {s:"two-storey-office",c:"com",y:2025,n:5,
+  t:{en:"Two-Storey Office",ru:"Двухэтажный офис"},
+  d:{en:"A low office building with a white frame and timber-toned panels between the windows. A landscaped forecourt with flagpoles faces the street, and the aerial view shows the hipped roof and the garden behind.",
+     ru:"Невысокое офисное здание с белым каркасом и панелями под дерево между окнами. Озеленённая площадка с флагштоками обращена к улице, а вид сверху показывает вальмовую кровлю и сад за зданием."}},
+ {s:"contemporary-houses",c:"res",y:2025,n:7,
+  t:{en:"Contemporary Three-Storey Houses",ru:"Современные трёхэтажные дома"},
+  d:{en:"A pair of three-storey houses built from white and graphite volumes with vertical timber-look panels. Street views show the entrances and parking, and the aerial view shows the two houses side by side on a corner plot.",
+     ru:"Пара трёхэтажных домов из белых и графитовых объёмов с вертикальными панелями под дерево. Виды с улицы показывают входы и парковку, вид сверху показывает оба дома рядом на угловом участке."}},
+ {s:"poultry-farm",c:"ind",y:2025,n:7,
+  t:{en:"Poultry Farm Complex",ru:"Птицеводческий комплекс"},
+  d:{en:"Long poultry houses with ventilation units, a two-storey administration building and service blocks on a rural site. The aerial views show the layout of the houses, the roads and the green buffer around the farm.",
+     ru:"Длинные птичники с вентиляционными установками, двухэтажный административный корпус и хозяйственные блоки на загородном участке. Виды сверху показывают расстановку корпусов, дороги и зелёную зону вокруг комплекса."}},
+ {s:"modern-townhouses",c:"res",y:2025,n:5,
+  t:{en:"Modern Townhouses",ru:"Современные таунхаусы"},
+  d:{en:"A row of two-storey townhouses with framed upper volumes in dark panels and integrated garages. A shared lawn runs along the front, and the evening views show the warm light of the entrances.",
+     ru:"Ряд двухэтажных таунхаусов с выступающими верхними объёмами в тёмном обрамлении и встроенными гаражами. Вдоль фасада тянется общий газон, а вечерние виды показывают тёплый свет входных зон."}},
+ {s:"street-retail",c:"com",y:2024,n:4,
+  t:{en:"Street Retail Building",ru:"Торговое здание на улице"},
+  d:{en:"A three-storey retail and office block with a stone grid frame and bronze-toned glazing, set behind a parking forecourt next to existing buildings.",
+     ru:"Трёхэтажный торгово-офисный корпус с каменной сеткой фасада и остеклением бронзового оттенка, за парковкой рядом с существующей застройкой."}},
+ {s:"warehouse-wing",c:"ind",y:2026,n:6,
+  t:{en:"Warehouse with Office Wing",ru:"Склад с офисным крылом"},
+  d:{en:"A warehouse in grey and white panels with a two-storey office front and a classical guard house at the gate. Street and courtyard views are paired with aerial views of the plot among gardens.",
+     ru:"Склад в серо-белых панелях с двухэтажной офисной частью и классическим постом охраны у въезда. Виды с улицы и из двора дополнены видами сверху на участок среди садов."}},
+ {s:"yangiyol-production",c:"ind",y:2025,n:6,loc:{en:"Yangiyo‘l",ru:"Янгиюль"},
+  t:{en:"Production Base",ru:"Производственная база"},
+  d:{en:"A production site on a long, narrow plot beside a railway, with a two-storey administration building, workshops and a planted strip down the middle of the yard.",
+     ru:"Производственная площадка на длинном узком участке вдоль железной дороги: двухэтажный административный корпус, цеха и озеленённая полоса посередине двора."}},
+ {s:"warehouse-office",c:"ind",y:2024,n:6,
+  t:{en:"Warehouse and Office Building",ru:"Складской корпус с офисом"},
+  d:{en:"A two-storey office front attached to a warehouse with a loading canopy and a truck yard. Light panels, dark window bands and wall lights give the long façade a clear rhythm.",
+     ru:"Двухэтажная офисная часть, пристроенная к складу с погрузочным навесом и двором для грузовиков. Светлые панели, тёмные полосы окон и настенные светильники задают длинному фасаду чёткий ритм."}}
+];
+var HERO=["qashqadaryo-villa","boulevard-retail","admin-production","xumson-villa"];
+
+/* register codes: AG-YY-NN, numbered per year in register order */
+var per={};P.forEach(function(p){per[p.y]=(per[p.y]||0)+1;p.code="AG-"+String(p.y).slice(2)+"-"+String(per[p.y]).padStart(2,"0");});
+var BY={};P.forEach(function(p,i){BY[p.s]=i;});
+
+var lang="en",filter="all";
+try{var sl=localStorage.getItem("ag-lang");if(sl==="ru"||sl==="en")lang=sl;}catch(e){}
+try{var sf=localStorage.getItem("ag-filter");if(sf&&(sf==="all"||CAT[sf]))filter=sf;}catch(e){}
+
+function t(k){return (T[lang]&&T[lang][k])||T.en[k]||k;}
+function L(o){return o?(o[lang]||o.en):"";}
+function views(n){
+  if(lang==="ru"){var m10=n%10,m100=n%100;var w=(m10===1&&m100!==11)?"вид":(m10>=2&&m10<=4&&(m100<12||m100>14))?"вида":"видов";return n+" "+w;}
+  return n+(n===1?" view":" views");
+}
+function locOf(p){return p.loc?L(p.loc):t("uz");}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+
+/* ---------- static text ---------- */
+function applyText(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-t]").forEach(function(el){el.textContent=t(el.getAttribute("data-t"));});
+  document.querySelectorAll(".lang button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.lang===lang));});
+  document.getElementById("fig-shown").textContent=P.length;
+}
+
+/* ---------- filters & grid ---------- */
+var grid=document.getElementById("grid"),filters=document.getElementById("filters");
+function renderFilters(){
+  var counts={all:P.length};P.forEach(function(p){counts[p.c]=(counts[p.c]||0)+1;});
+  var keys=["all"].concat(Object.keys(CAT));
+  filters.innerHTML=keys.map(function(k){
+    var label=k==="all"?t("all"):L(CAT[k]);
+    return '<button type="button" id="f-'+k+'" data-f="'+k+'" aria-pressed="'+(filter===k)+'">'+esc(label)+'<sup>'+counts[k]+'</sup></button>';
+  }).join("");
+}
+function list(){return P.filter(function(p){return filter==="all"||p.c===filter;});}
+function renderGrid(){
+  grid.innerHTML=list().map(function(p){
+    var i=BY[p.s];
+    return '<button type="button" class="card" data-i="'+i+'" aria-label="'+esc(t("open")+": "+L(p.t))+'">'+
+      '<div class="card-img"><img src="../img/'+p.s+'/card.webp" alt="'+esc(L(p.t))+'" loading="lazy" decoding="async" width="960" height="640"><span class="card-count">'+esc(views(p.n))+'</span></div>'+
+      '<div class="card-meta"><span class="mono code">'+p.code+'</span><span class="mono cat">'+esc(L(CAT[p.c]))+'</span></div>'+
+      '<h3>'+esc(L(p.t))+'</h3><p class="loc">'+esc(locOf(p))+' · '+p.y+'</p></button>';
+  }).join("");
+}
+filters.addEventListener("click",function(e){
+  var b=e.target.closest("button[data-f]");if(!b)return;
+  filter=b.dataset.f;try{localStorage.setItem("ag-filter",filter);}catch(err){}
+  renderFilters();renderGrid();
+});
+grid.addEventListener("click",function(e){var c=e.target.closest(".card");if(c)openViewer(+c.dataset.i,0,c);});
+
+/* ---------- hero ---------- */
+var heroImgs=[].slice.call(document.querySelectorAll("#hero-media img")),hi=0,htimer=null;
+var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var dots=document.getElementById("hero-dots"),cur=document.getElementById("hero-current");
+dots.innerHTML=heroImgs.map(function(_,i){return '<button type="button" id="hd-'+i+'" data-h="'+i+'" aria-current="'+(i===0)+'"><span class="sr">'+(i+1)+'</span></button>';}).join("");
+function heroLabel(){var p=P[BY[HERO[hi]]];cur.textContent=p.code+" · "+L(p.t);cur.setAttribute("aria-label",t("open")+": "+L(p.t));
+  heroImgs.forEach(function(im,i){im.alt=i===hi?L(P[BY[HERO[i]]].t):"";});}
+function heroGo(i){hi=(i+heroImgs.length)%heroImgs.length;
+  heroImgs.forEach(function(im,k){im.classList.toggle("on",k===hi);});
+  dots.querySelectorAll("button").forEach(function(b,k){b.setAttribute("aria-current",String(k===hi));});heroLabel();}
+function heroAuto(){if(reduce)return;clearInterval(htimer);htimer=setInterval(function(){heroGo(hi+1);},6500);}
+dots.addEventListener("click",function(e){var b=e.target.closest("button[data-h]");if(!b)return;heroGo(+b.dataset.h);heroAuto();});
+cur.addEventListener("click",function(){openViewer(BY[HERO[hi]],0,cur);});
+heroAuto();
+
+/* ---------- viewer ---------- */
+var V=document.getElementById("viewer"),vImg=document.getElementById("v-img"),vThumbs=document.getElementById("v-thumbs");
+var vp=0,vi=0,lastFocus=null;
+function src(p,k){return "../img/"+p.s+"/"+(k+1)+".webp";}
+function capFor(p,k){if(!p.cap)return "";for(var j=0;j<p.cap.length;j++){var c=p.cap[j];if(k+1>=c[0]&&k+1<=c[1])return L(c[2]);}return "";}
+function fillPanel(){
+  var p=P[vp];
+  document.getElementById("v-code").textContent=p.code;
+  document.getElementById("v-title").textContent=L(p.t);
+  document.getElementById("v-desc").textContent=L(p.d);
+  document.getElementById("v-tb").innerHTML=
+    '<div><dt>'+t("tb_type")+'</dt><dd>'+esc(L(CAT[p.c]))+'</dd></div>'+
+    '<div><dt>'+t("tb_year")+'</dt><dd>'+p.y+'</dd></div>'+
+    '<div><dt>'+t("tb_loc")+'</dt><dd>'+esc(locOf(p))+'</dd></div>'+
+    '<div><dt>'+t("tb_views")+'</dt><dd>'+p.n+'</dd></div>'+
+    '<div class="wide"><dt>'+t("tb_scope")+'</dt><dd>'+esc(t("scope"))+'</dd></div>';
+  var a=P[(vp-1+P.length)%P.length],b=P[(vp+1)%P.length];
+  document.getElementById("v-prevp").innerHTML='<span>← '+esc(t("prevp"))+'</span>'+esc(L(a.t));
+  document.getElementById("v-nextp").innerHTML='<span>'+esc(t("nextp"))+' →</span>'+esc(L(b.t));
+  vThumbs.innerHTML=Array.from({length:p.n},function(_,k){return '<button type="button" id="vt-'+k+'" data-k="'+k+'" aria-label="'+(k+1)+'"><img src="'+src(p,k)+'" alt="" loading="lazy" decoding="async"></button>';}).join("");
+  document.getElementById("v-close").textContent=t("close");
+}
+function show(k){
+  var p=P[vp];vi=(k+p.n)%p.n;
+  vImg.classList.add("fade");
+  var s=src(p,vi),pre=new Image();
+  pre.onload=pre.onerror=function(){if(src(P[vp],vi)!==s)return;vImg.src=s;vImg.alt=L(p.t)+" · "+(vi+1);vImg.classList.remove("fade");};
+  pre.src=s;
+  document.getElementById("v-count").textContent=String(vi+1).padStart(2,"0")+" / "+String(p.n).padStart(2,"0");
+  document.getElementById("v-cap").textContent=capFor(p,vi);
+  vThumbs.querySelectorAll("button").forEach(function(b,j){b.setAttribute("aria-current",String(j===vi));if(j===vi&&b.scrollIntoView)b.scrollIntoView({block:"nearest",inline:"nearest"});});
+  [1,-1].forEach(function(d){var im=new Image();im.src=src(p,(vi+d+p.n)%p.n);});
+}
+function openViewer(i,k,from){
+  lastFocus=from||document.activeElement;vp=i;fillPanel();V.hidden=false;document.body.classList.add("locked");show(k||0);
+  try{history.replaceState(null,"","#"+P[vp].s);}catch(e){}
+  document.getElementById("v-close").focus({preventScroll:true});
+}
+function closeViewer(){V.hidden=true;document.body.classList.remove("locked");
+  try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
+  if(lastFocus&&lastFocus.focus)lastFocus.focus({preventScroll:true});}
+function project(d){vp=(vp+d+P.length)%P.length;fillPanel();show(0);try{history.replaceState(null,"","#"+P[vp].s);}catch(e){}}
+document.getElementById("v-prev").addEventListener("click",function(){show(vi-1);});
+document.getElementById("v-next").addEventListener("click",function(){show(vi+1);});
+document.getElementById("v-close").addEventListener("click",closeViewer);
+document.getElementById("v-prevp").addEventListener("click",function(){project(-1);});
+document.getElementById("v-nextp").addEventListener("click",function(){project(1);});
+vThumbs.addEventListener("click",function(e){var b=e.target.closest("button[data-k]");if(b)show(+b.dataset.k);});
+document.addEventListener("keydown",function(e){
+  if(V.hidden)return;
+  if(e.key==="Escape"){e.preventDefault();closeViewer();}
+  else if(e.key==="ArrowRight"){e.preventDefault();show(vi+1);}
+  else if(e.key==="ArrowLeft"){e.preventDefault();show(vi-1);}
+  else if(e.key==="Tab"){var f=[].slice.call(V.querySelectorAll("button")).filter(function(x){return x.offsetParent!==null;});if(!f.length)return;
+    var first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+});
+var tx=null,ty=null,fr=document.getElementById("v-frame");
+fr.addEventListener("touchstart",function(e){var p=e.changedTouches[0];tx=p.clientX;ty=p.clientY;},{passive:true});
+fr.addEventListener("touchend",function(e){if(tx===null)return;var p=e.changedTouches[0],dx=p.clientX-tx,dy=p.clientY-ty;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.3)show(vi+(dx<0?1:-1));tx=null;},{passive:true});
+
+/* ---------- language ---------- */
+document.querySelector(".lang").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-lang]");if(!b||b.dataset.lang===lang)return;
+  lang=b.dataset.lang;try{localStorage.setItem("ag-lang",lang);}catch(err){}
+  render();if(!V.hidden){fillPanel();show(vi);}
+});
+
+/* ---------- copy ---------- */
+document.querySelectorAll(".copy").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    var el=document.getElementById(btn.dataset.copy),txt=el.textContent.trim();
+    function selectIt(){var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r);btn.textContent=t("selected");}
+    function done(){btn.textContent=t("copied");setTimeout(function(){btn.textContent=t("copy");},1800);}
+    try{navigator.clipboard.writeText(txt).then(done,selectIt);}catch(err){selectIt();}
+  });
+});
+
+function render(){applyText();renderFilters();renderGrid();heroLabel();}
+render();
+var h=(location.hash||"").slice(1);
+if(h&&BY.hasOwnProperty(h)){openViewer(BY[h],0);}
+})();
+</script>
+
+</body>
+</html>
